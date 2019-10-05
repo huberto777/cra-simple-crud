@@ -9,25 +9,11 @@ class AddArticle extends Component {
       text: ""
     };
   }
-
-  handleAuthor = e => {
-    // console.log(e.target.value);
-    this.setState({
-      author: e.target.value
-    });
-  };
-
-  handleTitle = e => {
-    // console.log(e.target.value);
-    this.setState({
-      title: e.target.value
-    });
-  };
-
+  
   handleText = e => {
-    // console.log(e.target.value);
+    console.log(e.target.value);
     this.setState({
-      text: e.target.value
+      [e.target.name]: e.target.value
     });
   };
 
@@ -55,18 +41,21 @@ class AddArticle extends Component {
           value={this.state.author}
           type="text"
           placeholder="autor"
-          onChange={this.handleAuthor}
+          onChange={this.handleText}
+          name="author"
         />
         <input
           value={this.state.title}
           type="text"
           placeholder="tytuł"
-          onChange={this.handleTitle}
+          onChange={this.handleText}
+          name="title"
         />
         <textarea
           value={this.state.text}
           onChange={this.handleText}
           placeholder="treść"
+          name="text"
         />
         <button className="save" onClick={this.handleSubmit}>
           zapisz

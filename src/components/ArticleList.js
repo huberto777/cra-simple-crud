@@ -74,11 +74,11 @@ class ArticleList extends Component {
   };
 
   render() {
-    const articles = this.state.articles.map((article, index) => {
+    const articles = this.state.articles.map(article => {
       // console.log(article, index);
       return (
         <Article
-          key={index}
+          key={article.id}
           article={article}
           delete={this.deleteArticle}
           edit={this.editArticle}
