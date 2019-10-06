@@ -37,7 +37,7 @@ class App extends Component {
             <Switch>
               {/* Switch - powoduje że jak react route znajdzie odpowiednią ścieżkę to nie poszukuje więcej*/}
               {/* exact - domyślnie jest true, znaczy dokładnie taki sam*/}
-              <Route path="/articles" component={ArticleList} />
+              <Route path="/" component={ArticleList} />
               <Route component={ErrorPage} />
             </Switch>
           </section>

@@ -1,31 +1,37 @@
 import React, { Component } from "react";
-import Article from "./Article";
+import ArticleItem from "./ArticleItem";
 import AddArticle from "./AddArticle";
+import EditArticle from "./EditArticle";
 
 class ArticleList extends Component {
-  state = {
-    create: false,
-    articles: [
-      {
-        id: 1,
-        title: "Czym jest teoria strun",
-        author: "Jan Nowak",
-        text: "1111Lorem ipsum dolor sit amet?"
-      },
-      {
-        id: 2,
-        title: "Czym jest paradoks fermiego?",
-        author: "Andrzej Kwiatkowska",
-        text: "2222Lorem ipsum dolor sit amet consectetur adipisicing elit"
-      },
-      {
-        id: 3,
-        title: "Ciemna materia i ciemna energia?",
-        author: "Jan Kowalski",
-        text: "4444Lorem ipsum dolor sit amet consectetur."
-      }
-    ]
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      create: false,
+      edit: false,
+      articles: [
+        {
+          id: 1,
+          title: "Czym jest teoria strun",
+          author: "Jan Nowak",
+          text: "1111Lorem ipsum dolor sit amet?"
+        },
+        {
+          id: 2,
+          title: "Czym jest paradoks fermiego?",
+          author: "Andrzej Kwiatkowska",
+          text: "2222Lorem ipsum dolor sit amet consectetur adipisicing elit"
+        },
+        {
+          id: 3,
+          title: "Ciemna materia i ciemna energia?",
+          author: "Jan Kowalski",
+          text: "4444Lorem ipsum dolor sit amet consectetur."
+        }
+      ]
+    };
+    this.editArticle = this.editArticle.bind(this);
+  }
 
   deleteArticle = id => {
     // console.log(id);
@@ -48,53 +54,88 @@ class ArticleList extends Component {
     // console.log(article);
     this.setState(prevState => ({
       articles: [...prevState.articles, article],
-      create: !prevState.create
+      create: !prevState.create,
+      edit: false
     }));
   };
 
-  handleClick = () => {
+  handleCreateClick = () => {
     this.setState({
-      create: !this.state.create
+      create: !this.state.create,
+      edit: false
     });
   };
 
-  editArticle = (id, author, title, text) => {
-    // console.log(id);
-    // let article = this.state.articles[id - 1];
-    let article = this.state.articles.findIndex(article => article.id === id);
-    // console.log(article);
-    // console.log(id, author, title, text);
-    this.setState(prevState => ({
-      articles: prevState.articles.fill(
-        { author, title, text },
-        article,
-        article + 1
-      )
-    }));
+  editArticle() {
+    // console.log(arguments);
+    this.setState({
+      id: arguments[0],
+      author: arguments[1],
+      title: arguments[2],
+      text: arguments[3],
+      edit: !this.state.edit,
+      create: false
+    });
+  }
+
+  updateArticle = e => {
+    e.preventDefault();
+    const updateAuthor = e.target.updateAuthor.value;
+    const updateTitle = e.target.updateTitle.value;
+    const updateText = e.target.updateText.value;
+    // console.log(updateAuthor);
+    if (updateAuthor < 1 || updateTitle < 1 || updateText < 1)
+      return alert("wypełnij wszystkie pola");
+    this.setState({
+      articles: this.state.articles.map(article => {
+        if (article.id === this.state.id) {
+          article.author = updateAuthor;
+          article.title = updateTitle;
+          article.text = updateText;
+        }
+        return article;
+      }),
+      edit: false
+    });
   };
 
+  addArticleButton() {
+    if (!this.state.create) {
+      return (
+        <button className="add" onClick={this.handleCreateClick}>
+          dodanie artykułu
+        </button>
+      );
+    } else {
+      return (
+        <AddArticle add={this.addArticle} reset={this.handleCreateClick} />
+      );
+    }
+  }
   render() {
     const articles = this.state.articles.map(article => {
-      // console.log(article, index);
       return (
-        <Article
+        <ArticleItem
           key={article.id}
           article={article}
           delete={this.deleteArticle}
           edit={this.editArticle}
-          reset={this.handleClick}
         />
       );
     });
 
     return (
       <>
-        {this.state.create ? (
-          <AddArticle add={this.addArticle} reset={this.handleClick} />
+        {this.state.edit ? (
+          <EditArticle
+            update={this.updateArticle}
+            author={this.state.author}
+            title={this.state.title}
+            text={this.state.text}
+            editMode={this.editArticle}
+          />
         ) : (
-          <button className="add" onClick={this.handleClick}>
-            dodanie artykułu
-          </button>
+          this.addArticleButton()
         )}
         <div>{articles}</div>
       </>

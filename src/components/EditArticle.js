@@ -1,76 +1,34 @@
-import React, { Component } from "react";
+import React from "react";
 
-class EditArticle extends Component {
-  state = {
-    id: this.props.article.id,
-    author: this.props.article.author,
-    title: this.props.article.title,
-    text: this.props.article.text
-  };
-
-  handleInputAuthor = e => {
-    this.setState({
-      author: e.target.value
-    });
-  };
-
-  handleInputTitle = e => {
-    this.setState({
-      title: e.target.value
-    });
-  };
-
-  handleInputText = e => {
-    this.setState({
-      text: e.target.value
-    });
-  };
-
-  handleUpdate = id => {
-    // console.log("update id nr:", id);
-    const { author, title, text } = this.state;
-    this.setState({
-      author,
-      title,
-      text
-    });
-
-    this.props.edit(id, author, title, text);
-    this.props.editMode();
-  };
-
-  render() {
-    const { id, author, title, text } = this.state;
-    // console.log(this.props);
-    return (
-      <div className="editForm">
-        <h3>Edycja: {title}</h3>
+const EditArticle = props => {
+  const { author, title, text } = props;
+  // console.log(this.props);
+  return (
+    <div className="editForm">
+      <h3>Edycja: {title}</h3>
+      <form onSubmit={props.update}>
         <input
-          value={author}
+          defaultValue={author}
           type="text"
           placeholder="autor"
-          onChange={this.handleInputAuthor}
+          name="updateAuthor"
         />
         <input
-          value={title}
+          defaultValue={title}
           type="text"
           placeholder="tytuł"
-          onChange={this.handleInputTitle}
+          name="updateTitle"
         />
-        <textarea
-          value={text}
-          onChange={this.handleInputText}
-          placeholder="treść"
-        />
-        <button className="update" onClick={() => this.handleUpdate(id)}>
+        <textarea defaultValue={text} placeholder="treść" name="updateText" />
+        <button className="update" type="submit">
           update
         </button>
-        <button className="reset" onClick={this.props.editMode}>
+        <button className="reset" onClick={props.editMode}>
           anuluj
         </button>
-      </div>
-    );
-  }
-}
+      </form>
+    </div>
+  );
+};
 
 export default EditArticle;
