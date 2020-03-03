@@ -1,34 +1,63 @@
-import React from "react";
+import React, { Component } from "react";
 
-const EditArticle = props => {
-  const { author, title, text } = props;
-  // console.log(this.props);
-  return (
-    <div className="editForm">
-      <h3>Edycja: {title}</h3>
-      <form onSubmit={props.update}>
+class EditArticle extends Component {
+  state = {
+    author: this.props.author,
+    title: this.props.title,
+    text: this.props.text
+  };
+
+  handleText = e => {
+    this.setState({
+      [e.target.name]: e.target.value
+    });
+  };
+
+  update = () => {
+    const { author, title, text } = this.state;
+    const { id } = this.props;
+    if (author.length < 3 || title.length < 3 || text.length < 3) return;
+    this.props.updateArticle(id, {
+      id,
+      author,
+      title,
+      text
+    });
+  };
+  render() {
+    const { author, title, text } = this.state;
+    return (
+      <div className="editForm">
+        <h3>Edycja: {title}</h3>
+
         <input
-          defaultValue={author}
+          value={author}
           type="text"
           placeholder="autor"
-          name="updateAuthor"
+          name="author"
+          onChange={this.handleText}
         />
         <input
-          defaultValue={title}
+          value={title}
           type="text"
           placeholder="tytuł"
-          name="updateTitle"
+          name="title"
+          onChange={this.handleText}
         />
-        <textarea defaultValue={text} placeholder="treść" name="updateText" />
-        <button className="update" type="submit">
+        <textarea
+          value={text}
+          placeholder="treść"
+          name="text"
+          onChange={this.handleText}
+        />
+        <button className="update" type="submit" onClick={this.update}>
           update
         </button>
-        <button className="reset" onClick={props.editMode}>
+        <button className="reset" onClick={this.props.cancelEdit}>
           anuluj
         </button>
-      </form>
-    </div>
-  );
-};
-
+      </div>
+    );
+  }
+}
 export default EditArticle;

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 class AddArticle extends Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class AddArticle extends Component {
       text: ""
     };
   }
-  
+
   handleText = e => {
     // console.log(e.target.value);
     this.setState({
@@ -21,8 +22,14 @@ class AddArticle extends Component {
     e.preventDefault();
     const { author, title, text } = this.state;
     // console.log(`values: ${author}, ${title}, ${text}`);
+    const article = {
+      id: uuidv4(),
+      author,
+      title,
+      text
+    };
     if (author.length > 2 && title.length > 2 && text.length > 5) {
-      this.props.add(author, title, text);
+      this.props.add(article);
       this.setState({
         author: "",
         title: "",

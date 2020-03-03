@@ -8,7 +8,7 @@ class ArticleList extends Component {
     super(props);
     this.state = {
       create: false,
-      edit: false,
+      editMode: false,
       articles: [
         {
           id: 1,
@@ -30,11 +30,9 @@ class ArticleList extends Component {
         }
       ]
     };
-    this.editArticle = this.editArticle.bind(this);
   }
 
   deleteArticle = id => {
-    // console.log(id);
     const articles = [...this.state.articles];
     const index = articles.findIndex(article => (article.id = id));
     articles.splice(index, 1);
@@ -43,101 +41,88 @@ class ArticleList extends Component {
     });
   };
 
-  addArticle = (author, title, text) => {
-    // console.log("dodaj");
-    const article = {
-      id: this.state.articles.length + 1,
-      author: author,
-      title: title,
-      text: text
-    };
-    // console.log(article);
+  addArticle = article => {
     this.setState(prevState => ({
-      articles: [...prevState.articles, article],
-      create: !prevState.create,
-      edit: false
+      articles: [article, ...prevState.articles],
+      create: !prevState.create
     }));
   };
 
-  handleCreateClick = () => {
+  handleCreate = () => {
+    this.setState(prevState => ({
+      create: !prevState.create
+    }));
+  };
+
+  editArticle = (id, title, author, text) => {
     this.setState({
-      create: !this.state.create,
-      edit: false
+      id,
+      title,
+      author,
+      text,
+      editMode: true
     });
   };
 
-  editArticle() {
-    // console.log(arguments);
+  cancelEdit = () => {
     this.setState({
-      id: arguments[0],
-      author: arguments[1],
-      title: arguments[2],
-      text: arguments[3],
-      edit: !this.state.edit,
-      create: false
+      editMode: false
     });
-  }
+  };
 
-  updateArticle = e => {
-    e.preventDefault();
-    const updateAuthor = e.target.updateAuthor.value;
-    const updateTitle = e.target.updateTitle.value;
-    const updateText = e.target.updateText.value;
-    // console.log(updateAuthor);
-    if (updateAuthor < 1 || updateTitle < 1 || updateText < 1)
-      return alert("wypełnij wszystkie pola");
-    this.setState({
-      articles: this.state.articles.map(article => {
-        if (article.id === this.state.id) {
-          article.author = updateAuthor;
-          article.title = updateTitle;
-          article.text = updateText;
-        }
-        return article;
-      }),
-      edit: false
-    });
+  updateArticle = (id, updatedItem) => {
+    this.setState(prevState => ({
+      articles: prevState.articles.map(article =>
+        article.id === id ? updatedItem : article
+      ),
+      editMode: false
+    }));
   };
 
   addArticleButton() {
     if (!this.state.create) {
       return (
-        <button className="add" onClick={this.handleCreateClick}>
+        <button className="add" onClick={this.handleCreate}>
           dodanie artykułu
         </button>
       );
     } else {
-      return (
-        <AddArticle add={this.addArticle} reset={this.handleCreateClick} />
-      );
+      return <AddArticle add={this.addArticle} reset={this.handleCreate} />;
     }
   }
   render() {
-    const articles = this.state.articles.map(article => {
-      return (
-        <ArticleItem
-          key={article.id}
-          article={article}
-          delete={this.deleteArticle}
-          edit={this.editArticle}
-        />
-      );
-    });
+    const { editMode, id, title, author, text } = this.state;
 
     return (
       <>
-        {this.state.edit ? (
+        {editMode ? (
           <EditArticle
-            update={this.updateArticle}
-            author={this.state.author}
-            title={this.state.title}
-            text={this.state.text}
-            editMode={this.editArticle}
+            id={id}
+            author={author}
+            title={title}
+            text={text}
+            updateArticle={this.updateArticle}
+            cancelEdit={this.cancelEdit}
           />
         ) : (
           this.addArticleButton()
         )}
-        <div>{articles}</div>
+        <div>
+          {this.state.articles.map(({ id, title, author, text }) => {
+            return (
+              <ArticleItem
+                key={id}
+                id={id}
+                title={title}
+                author={author}
+                text={text}
+                editMode={editMode}
+                deleteItem={() => this.deleteArticle(id)}
+                edit={() => this.editArticle(id, title, author, text)}
+              />
+            );
+          })}
+        </div>
       </>
     );
   }

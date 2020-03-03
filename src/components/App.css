@@ -97,3 +97,7 @@ textarea {
   background-color: grey;
   color: white;
 }
+ /* utility class */
+ .inactive {
+  filter: blur(2px) grayscale(1);
+}

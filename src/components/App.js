@@ -20,13 +20,7 @@ class App extends Component {
             <nav>
               <ul>
                 <li>
-                  <NavLink
-                    to="/articles"
-                    activeClassName="article"
-                    // activeStyle={{
-                    //   backgroundColor: "gray"
-                    // }}
-                  >
+                  <NavLink to="/articles" activeClassName="article">
                     ARTICLES
                   </NavLink>
                 </li>
