@@ -2,26 +2,26 @@ import React, { Component } from "react";
 
 class EditArticle extends Component {
   state = {
-    author: this.props.author,
-    title: this.props.title,
-    text: this.props.text
+    author: this.props.article.author,
+    title: this.props.article.title,
+    text: this.props.article.text,
   };
 
-  handleText = e => {
+  handleText = (e) => {
     this.setState({
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   update = () => {
     const { author, title, text } = this.state;
-    const { id } = this.props;
+    const { article, updateArticle } = this.props;
     if (author.length < 3 || title.length < 3 || text.length < 3) return;
-    this.props.updateArticle(id, {
-      id,
+    updateArticle({
+      ...article,
       author,
       title,
-      text
+      text,
     });
   };
   render() {

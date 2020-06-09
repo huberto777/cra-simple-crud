@@ -14,68 +14,65 @@ class ArticleList extends Component {
           id: 1,
           title: "Czym jest teoria strun",
           author: "Jan Nowak",
-          text: "1111Lorem ipsum dolor sit amet?"
+          text: "1111Lorem ipsum dolor sit amet?",
         },
         {
           id: 2,
           title: "Czym jest paradoks fermiego?",
           author: "Andrzej Kwiatkowska",
-          text: "2222Lorem ipsum dolor sit amet consectetur adipisicing elit"
+          text: "2222Lorem ipsum dolor sit amet consectetur adipisicing elit",
         },
         {
           id: 3,
           title: "Ciemna materia i ciemna energia?",
           author: "Jan Kowalski",
-          text: "4444Lorem ipsum dolor sit amet consectetur."
-        }
-      ]
+          text: "4444Lorem ipsum dolor sit amet consectetur.",
+        },
+      ],
     };
   }
 
-  deleteArticle = id => {
+  deleteArticle = ({ id }) => {
     const articles = [...this.state.articles];
-    const index = articles.findIndex(article => (article.id = id));
+    const index = articles.findIndex((article) => (article.id = id));
     articles.splice(index, 1);
     this.setState({
-      articles
+      articles,
     });
   };
 
-  addArticle = article => {
-    this.setState(prevState => ({
-      articles: [article, ...prevState.articles],
-      create: !prevState.create
+  addArticle = (createdArticle) => {
+    this.setState((prevState) => ({
+      articles: [createdArticle, ...prevState.articles],
+      create: !prevState.create,
     }));
   };
 
   handleCreate = () => {
-    this.setState(prevState => ({
-      create: !prevState.create
+    this.setState((prevState) => ({
+      create: !prevState.create,
     }));
   };
 
-  editArticle = (id, title, author, text) => {
+  editArticle = (article) => {
     this.setState({
-      id,
-      title,
-      author,
-      text,
-      editMode: true
+      article,
+      editMode: true,
     });
   };
 
   cancelEdit = () => {
     this.setState({
-      editMode: false
+      editMode: false,
     });
   };
 
-  updateArticle = (id, updatedItem) => {
-    this.setState(prevState => ({
-      articles: prevState.articles.map(article =>
-        article.id === id ? updatedItem : article
+  updateArticle = (updatedItem) => {
+    this.setState((prevState) => ({
+      articles: prevState.articles.map((article) =>
+        article.id === updatedItem.id ? updatedItem : article
       ),
-      editMode: false
+      editMode: false,
     }));
   };
 
@@ -91,16 +88,13 @@ class ArticleList extends Component {
     }
   }
   render() {
-    const { editMode, id, title, author, text } = this.state;
+    const { editMode, article } = this.state;
 
     return (
       <>
         {editMode ? (
           <EditArticle
-            id={id}
-            author={author}
-            title={title}
-            text={text}
+            article={article}
             updateArticle={this.updateArticle}
             cancelEdit={this.cancelEdit}
           />
@@ -108,17 +102,14 @@ class ArticleList extends Component {
           this.addArticleButton()
         )}
         <div>
-          {this.state.articles.map(({ id, title, author, text }) => {
+          {this.state.articles.map((article) => {
             return (
               <ArticleItem
-                key={id}
-                id={id}
-                title={title}
-                author={author}
-                text={text}
+                key={article.id}
+                article={article}
                 editMode={editMode}
-                deleteItem={() => this.deleteArticle(id)}
-                edit={() => this.editArticle(id, title, author, text)}
+                deleteItem={() => this.deleteArticle(article)}
+                edit={() => this.editArticle(article)}
               />
             );
           })}
